@@ -1,0 +1,55 @@
+export component CustomToggleSwitch inherits Rectangle {
+    callback toggled;
+    in-out property <string> text;
+    in-out property <bool> checked;
+
+    in-out property <percent> indicator_width;
+    in-out property <color> switch_color;
+
+    in-out property<bool> enabled <=> touch-area.enabled;
+
+    height: 60px;
+
+    horizontal-stretch: 0;
+    vertical-stretch: 0;
+
+    HorizontalLayout {
+        alignment: center;
+        spacing: 8px;
+        indicator := Rectangle {
+            width: indicator_width;
+            border-width: 1px;
+            border-radius: root.height / 2;
+            border-color: self.background.darker(25%);
+            background: root.enabled ? (root.checked ? switch_color: white)  : white;
+            animate background { duration: 100ms; }
+
+            bubble := Rectangle {
+                width: root.height - 8px;
+                height: bubble.width;
+                border-radius: bubble.height / 2;
+                y: 4px;
+                x: 4px + self.a * (indicator.width - bubble.width - 8px);
+                property <float> a: root.checked ? 1 : 0;
+                background: root.checked ? white : (root.enabled ? switch_color : gray);
+                animate a, background { duration: 200ms; easing: ease;}
+            }
+        }
+
+        Text {
+            min-width: max(100px, self.preferred-width);
+            text: root.text;
+            vertical-alignment: center;
+            color: root.enabled ? black : gray;
+        }
+
+    }
+
+    touch-area := TouchArea {
+        width: root.width;
+        height: root.height;
+        clicked => {
+            root.toggled();
+        }
+    }
+}
