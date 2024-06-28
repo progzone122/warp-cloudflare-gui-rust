@@ -1,0 +1,20 @@
+[package]
+name = "warp-cloudflare-gui-rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+slint = "1.6.0"
+
+[build-dependencies]
+slint-build = "1.6.0"
+
+[profile.release]
+opt-level = "s"  # Минимизация размера
+lto = "fat"     # Включение Link Time Optimization
+debug = true # Отключение отладочной информации
+codegen-units = 1  # Дополнительная оптимизация за счет компиляции всех юнитов вместе
+panic = 'abort'    # Опционально: уменьшение размера путем отключения обработки паники
+strip = true
+debug-assertions = false
+overflow-checks = false
