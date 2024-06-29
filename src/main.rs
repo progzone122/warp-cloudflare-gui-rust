@@ -12,8 +12,8 @@ fn main() -> Result<(), slint::PlatformError> {
     let app_weak = app.as_weak();
 
     app.on_connection_switch_toggled(move || {
-        if (app_weak.unwrap().get_connection_switch_enabled()) {
-            if (app_weak.unwrap().get_connection_switch_checked()) {
+        if app_weak.unwrap().get_connection_switch_enabled() {
+            if app_weak.unwrap().get_connection_switch_checked() {
                 if api.disconnect() == true {
                     let status: String = api.status();
                     app_weak.unwrap().set_status(SharedString::from(status));

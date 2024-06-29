@@ -3,15 +3,11 @@ use std::process::{Command, Output};
 use std::result;
 
 #[derive(Clone)]
-pub struct Api {
-    pub status: String
-}
+pub struct Api {}
 
 impl Api {
     pub fn new() -> Self {
-        Api {
-            status: "".to_string()
-        }
+        Api {}
     }
     pub fn connect(&self) -> bool {
         let result: Output = Command::new("sh")
@@ -49,13 +45,18 @@ impl Api {
             .arg("warp-cli status")
             .output()
             .expect("failed to execute process");
+
         if result.status.success() {
             let stdout: Cow<str> = String::from_utf8_lossy(&result.stdout);
-            let stdout: Vec<&str> = stdout.split(":").collect();
-            let stdout: Vec<&str> = stdout[1].split("\n").collect();
-            let stdout: &str = &stdout[0][1..];
+            let parts: Vec<&str> = stdout.split(':').collect();
 
-            return stdout.to_string();
+            if parts.len() > 2 {
+                let lines: Vec<&str> = parts[2].split('\n').collect();
+                return lines[0].trim().to_string();
+            } else if parts.len() > 1 {
+                let lines: Vec<&str> = parts[1].split('\n').collect();
+                return lines[0].trim().to_string();
+            }
         }
 
         "Unexpected error".to_string()
