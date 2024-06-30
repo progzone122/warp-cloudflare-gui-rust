@@ -61,4 +61,11 @@ impl Api {
 
         "Unexpected error".to_string()
     }
+    pub fn is_connected(&self) -> bool {
+        let status: String = self.status();
+        if status == "Connecting" {
+            return true;
+        }
+        false
+    }
 }
