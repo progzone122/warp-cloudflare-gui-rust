@@ -57,6 +57,9 @@ impl Api {
                 let lines: Vec<&str> = parts[1].split('\n').collect();
                 return lines[0].trim().to_string();
             }
+        } else {
+            let stderr: Cow<str> = String::from_utf8_lossy(&result.stderr);
+            return stderr.to_string();
         }
 
         "Unexpected error".to_string()
