@@ -1,6 +1,7 @@
 import { HorizontalBox } from "std-widgets.slint";
 import { CustomToggleSwitch } from "components/CustomToggleSwitch.slint";
 import { DialogWindow } from "./dialog.slint";
+import { SettingsWindow } from "./settings.slint";
 
 export component SettingsButton inherits Rectangle {
     callback clicked;
@@ -19,6 +20,9 @@ export component SettingsButton inherits Rectangle {
     touch := TouchArea {
         width: root.width;
         height: root.height;
+        clicked => {
+            root.clicked();
+        }
     }
 }
 
@@ -32,6 +36,7 @@ export component AppWindow inherits Window {
 
     // callbacks
     callback connection_switch_toggled <=> connection_switch.toggled;
+    callback settings_clicked_button <=> settings.clicked;
 
     // colors
     property <[color]> warp_in_rust_text_color_gradient: [#ff7017, #871e04, #ad4605];
@@ -132,7 +137,7 @@ export component AppWindow inherits Window {
                 VerticalLayout {
                     alignment: center;
 
-                    SettingsButton {}
+                    settings := SettingsButton {}
                 }
             }
         }

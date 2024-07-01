@@ -1,0 +1,41 @@
+import { HorizontalBox, ComboBox } from "std-widgets.slint";
+export component SettingsWindow inherits Window {
+    width: 300px;
+    height: 400px;
+    background: black;
+    title: "Settings";
+
+    VerticalLayout {
+        HorizontalBox {
+            alignment: center;
+            height: 40px;
+
+            Text {
+                text: "Settings";
+                color: white;
+                font-size: 20px;
+            }
+        }
+        HorizontalBox {
+            height: 40px;
+
+            VerticalLayout {
+                alignment: end;
+
+                Text {
+                    text: "WARP mode: ";
+                    color: white;
+                    font-size: 16px;
+                }
+            }
+            VerticalLayout {
+                alignment: center;
+
+                ComboBox {
+                    model: ["warp", "doh", "warp+doh", "dot", "warp+dot", "proxy", "tunnel_only"];
+                    current-index: 0;
+                }
+            }
+        }
+    }
+}
