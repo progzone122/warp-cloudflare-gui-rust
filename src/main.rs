@@ -17,7 +17,6 @@ mod api;
 
 use api::Api;
 use slint::{SharedString, Model, Weak, Timer, TimerMode};
-use std::thread;
 use std::time::Duration;
 
 fn show_dialog(weak: &Weak<CustomDialogWindow>, dialog_type: &str, text: &str) {
@@ -27,6 +26,8 @@ fn show_dialog(weak: &Weak<CustomDialogWindow>, dialog_type: &str, text: &str) {
         dialog.show().expect("Error: Failed to show window");
     }
 }
+
+const APP_VERSION: &str = "0.0.1";
 
 fn main() -> Result<(), slint::PlatformError> {
     let app = AppWindow::new()?;
@@ -40,6 +41,9 @@ fn main() -> Result<(), slint::PlatformError> {
     let app_weak = app.as_weak();
     let dialog_weak = dialog.as_weak();
     let setting_weak = settings.as_weak();
+
+    // Set app version
+    setting_weak.unwrap().set_app_version(SharedString::from(APP_VERSION));
 
     // Set default switch On/Off value
     if app_weak.upgrade().unwrap().get_connection_switch_enabled() {

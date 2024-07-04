@@ -8,6 +8,8 @@ export component SettingsWindow inherits Window {
     in-out property <bool> account_register_enabled <=> account_register.enabled;
     in-out property <bool> account_delete_enabled <=> account_delete.enabled;
 
+    in-out property <string> app_version;
+
     callback warp_mode_setting_choose <=> warp_mode_setting.choose;
     callback account_register_clicked;
     callback account_delete_clicked;
@@ -94,6 +96,34 @@ export component SettingsWindow inherits Window {
                         }
                     }
                 }
+            }
+        }
+        // App info
+        HorizontalBox {
+            height: 40px;
+
+            VerticalLayout {
+                alignment: end;
+
+                Text {
+                    text: "Version: ";
+                    color: white;
+                    font-size: 16px;
+                }
+            }
+            HorizontalLayout {
+                alignment: end;
+
+            VerticalLayout {
+                alignment: center;
+
+                Text {
+                    text: app_version;
+                    color: white;
+                    font-size: 16px;
+                    font-weight: 600;
+                }
+            }
             }
         }
     }
