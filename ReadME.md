@@ -2,6 +2,8 @@
 A GUI application based on warp-cli for linux written in Rust
 
 ## Screenshots
+![1720103650_grim](https://github.com/progzone122/warp-cloudflare-gui-rust/assets/80642969/def8c5ad-7628-4ada-a15b-3cbe1f068499) ![1720103658_grim](https://github.com/progzone122/warp-cloudflare-gui-rust/assets/80642969/6c47a077-0a78-4769-842d-dafd4fbdf5dc) ![1720103690_grim](https://github.com/progzone122/warp-cloudflare-gui-rust/assets/80642969/fed130a5-b058-4b36-a4e0-d79a9d21e2e9)
+
 
 ## Installation Guide
 ### I use Arch Linux btw?
