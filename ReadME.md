@@ -47,10 +47,10 @@ Install using the script from AUR!
         sudo chmod +x warp-gui
     ``
 
-5. To run the program anywhere using the terminal, move the binary file to the /bin directory
+5. To run the program anywhere using the terminal, move the binary file to the /usr/bin directory
 
     ``
-        sudo mv ./warp-gui /bin/warp-gui
+        sudo mv ./warp-gui /usr/bin/warp-gui
     ``
 
 6. Run binary
