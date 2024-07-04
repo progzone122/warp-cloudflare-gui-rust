@@ -65,7 +65,7 @@ impl Api {
     }
     pub fn is_connected(&self) -> bool {
         let status: String = self.status();
-        if status == "Connecting" {
+        if status == "Connecting" || status == "Connected" {
             return true;
         }
         false
