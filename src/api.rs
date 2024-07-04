@@ -1,8 +1,7 @@
 use std::borrow::Cow;
 use std::process::{Command, Output};
-use std::result;
 
-#[derive(Clone)]
+s
 pub struct Api {}
 
 impl Api {
@@ -70,5 +69,82 @@ impl Api {
             return true;
         }
         false
+    }
+
+    pub fn get_mode(&self) -> i32 {
+        let result: Output = Command::new("sh")
+            .arg("-c")
+            .arg("warp-cli settings")
+            .output()
+            .expect("failed to execute process");
+
+        if result.status.success() {
+            let stdout: Cow<str> = String::from_utf8_lossy(&result.stdout);
+            let parts: Vec<&str> = stdout.split('\n').collect();
+            let parts: Vec<&str> = parts[3].split(':').collect();
+            let mode: &str = parts[1].trim();
+
+            match mode {
+                "Warp" => return 0, // warp
+                "DnsOverHttps" => return 1, // https
+                "WarpWithDnsOverHttps" => return 2, // warp+doh
+                "DnsOverTls" => return 3, // dot
+                "WarpWithDnsOverTls" => 4, // warp+dot
+                "WarpProxy on port 40000" => 5, // proxy
+                "TunnelOnly" => 6, // tunnel_only
+                _ => return 0
+            }
+        } else {
+            0
+        }
+    }
+    pub fn set_mode(&self, mode: &str) {
+        Command::new("sh")
+            .arg("-c")
+            .arg(format!("warp-cli set-mode {}", mode))
+            .output()
+            .expect("failed to execute process");
+    }
+    pub fn register_account(&self) -> (bool, String) {
+        let result: Output = Command::new("sh")
+            .arg("-c")
+            .arg("warp-cli registration new")
+            .output()
+            .expect("failed to execute process");
+
+        return if result.status.success() {
+            let result: Cow<str> = String::from_utf8_lossy(&result.stdout);
+            let parts: Vec<&str> = result.split("\n").collect();
+
+            if parts[0] == "Success" {
+                (true, "".to_string())
+            } else {
+                (false, result.to_string())
+            }
+        } else {
+            let error: Cow<str> = String::from_utf8_lossy(&result.stderr);
+            (false, error.to_string())
+        }
+    }
+    pub fn delete_account(&self) -> (bool, String) {
+        let result: Output = Command::new("sh")
+            .arg("-c")
+            .arg("warp-cli registration delete")
+            .output()
+            .expect("failed to execute process");
+
+        return if result.status.success() {
+            let result: Cow<str> = String::from_utf8_lossy(&result.stdout);
+            let parts: Vec<&str> = result.split("\n").collect();
+
+            if parts[0] == "Success" {
+                (true, "".to_string())
+            } else {
+                (false, result.to_string())
+            }
+        } else {
+            let error: Cow<str> = String::from_utf8_lossy(&result.stderr);
+            (false, error.to_string())
+        }
     }
 }

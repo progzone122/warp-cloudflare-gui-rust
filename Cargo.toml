@@ -10,7 +10,7 @@ slint = { version = "1.6.0", default-features = false, features = ["backend-qt",
 slint-build = "1.6.0"
 
 [profile.release]
-opt-level = "s"
+opt-level = "z"
 lto = "fat"
 debug = true
 codegen-units = 1
