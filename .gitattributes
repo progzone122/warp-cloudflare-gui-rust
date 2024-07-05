@@ -1,0 +1,3 @@
+*.rs linguist-language=Rust
+*.slint linguist-language=Slint
+*.slint linguist-detectable=false
