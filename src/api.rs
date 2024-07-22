@@ -105,7 +105,8 @@ impl Api {
             .output()
             .expect("failed to execute process");
     }
-    pub fn register_account(&self) -> (bool, String) {
+
+    pub fn register_account(&self) -> Result<(), String> {
         let result: Output = Command::new("sh")
             .arg("-c")
             .arg("warp-cli registration new")
@@ -117,16 +118,16 @@ impl Api {
             let parts: Vec<&str> = result.split("\n").collect();
 
             if parts[0] == "Success" {
-                (true, "".to_string())
+                Ok(())
             } else {
-                (false, result.to_string())
+                Err(result.to_string())
             }
         } else {
             let error: Cow<str> = String::from_utf8_lossy(&result.stderr);
-            (false, error.to_string())
+            Err(error.to_string())
         }
     }
-    pub fn delete_account(&self) -> (bool, String) {
+    pub fn delete_account(&self) -> Result<(), String> {
         let result: Output = Command::new("sh")
             .arg("-c")
             .arg("warp-cli registration delete")
@@ -138,13 +139,13 @@ impl Api {
             let parts: Vec<&str> = result.split("\n").collect();
 
             if parts[0] == "Success" {
-                (true, "".to_string())
+                Ok(())
             } else {
-                (false, result.to_string())
+                Err(result.to_string())
             }
         } else {
             let error: Cow<str> = String::from_utf8_lossy(&result.stderr);
-            (false, error.to_string())
+            Err(error.to_string())
         }
     }
 }

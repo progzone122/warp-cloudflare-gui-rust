@@ -131,12 +131,14 @@ fn main() -> Result<(), slint::PlatformError> {
 
             // The timer is needed for a delay so that the buttons have time to deactivate after pressing
             timer1.start(TimerMode::SingleShot, Duration::from_millis(500), move || {
-                let status: (bool, String) = api.register_account();
-                if status.0 {
-                    show_dialog(&dialog_weak_clone_register2, "warning", "Account successfully registered");
-                } else {
-                    show_dialog(&dialog_weak_clone_register2, "error", &status.1);
-                }
+                match api.register_account() {
+                    Ok(_) => {
+                        show_dialog(&dialog_weak_clone_register2, "warning", "Account successfully registered");
+                    }
+                    Err(e) => {
+                        show_dialog(&dialog_weak_clone_register2, "error", &e);
+                    }
+                };
                 setting.set_account_register_enabled(true);
                 setting.set_account_delete_enabled(true);
             });
@@ -153,12 +155,14 @@ fn main() -> Result<(), slint::PlatformError> {
 
             // The timer is needed for a delay so that the buttons have time to deactivate after pressing
             timer2.start(TimerMode::SingleShot, Duration::from_millis(500), move || {
-                let status: (bool, String) = api.delete_account();
-                if status.0 {
-                    show_dialog(&dialog_weak_clone_delete2, "warning", "Account successfully deleted");
-                } else {
-                    show_dialog(&dialog_weak_clone_delete2, "error", &status.1);
-                }
+                match api.delete_account() {
+                    Ok(_) => {
+                        show_dialog(&dialog_weak_clone_delete2, "warning", "Account successfully deleted");
+                    }
+                    Err(e) => {
+                        show_dialog(&dialog_weak_clone_delete2, "error", &e);
+                    }
+                };
                 setting.set_account_register_enabled(true);
                 setting.set_account_delete_enabled(true);
             });
