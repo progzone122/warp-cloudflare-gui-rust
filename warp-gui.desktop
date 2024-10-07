@@ -2,7 +2,7 @@
 Name=Warp GUI
 Comment=A GUI application based on warp-cli for linux written in Rust
 Exec=warp-gui
-Icon=/usr/share/icons/hicolor/48x48/apps/warp-gui.png
+Icon=zero-trust-orange
 Terminal=false
 Type=Application
 Categories=Network;Security;Internet;
