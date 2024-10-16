@@ -1,4 +1,4 @@
-use iced::Element;
+use iced::{Element, Padding};
 use iced::widget::{button, column, image, text, toggler};
 use crate::Message;
 use crate::theme::button::button_primary_style;
@@ -18,11 +18,18 @@ impl Settings {
 
     pub fn view(&self) -> Element<'_, Message> {
         column![
-            text("Settings")
-                .size(30),
             button("Back")
                 .style(button_primary_style)
-                .on_press(Message::BackToHome)
-        ].into()
+                .on_press(Message::BackToHome),
+
+            column![
+                text(format!("Version: {}", env!("CARGO_PKG_VERSION")))
+                .size(18),
+            ]
+                .spacing(10)
+        ]
+            .padding(20)
+            .spacing(30)
+            .into()
     }
 }
