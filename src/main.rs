@@ -1,12 +1,14 @@
-mod theme;
-mod api;
-mod pages;
+pub mod theme;
+pub mod api;
+pub mod pages;
+pub mod embed;
 
 use iced::{Element, Task, Theme};
 use iced::application::View;
 use iced::window::Settings;
 use crate::api::Api;
 use crate::theme::{ACCENT_COLOR, PALETTE};
+use embed::Images;
 
 struct App {
     current_page: Page,

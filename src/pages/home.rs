@@ -1,6 +1,8 @@
 use iced::{Alignment, ContentFit, Element, Font, Length, Padding, Theme};
-use iced::widget::{button, column, container, image, row, text, toggler, Container};
+use iced::widget::{button, column, container, image, row, text, toggler, Button, Container, Image};
+use iced::widget::image::Handle;
 use crate::api::Api;
+use crate::embed::load_image;
 use crate::Message;
 use crate::Message::OpenSettings;
 use crate::theme::{button::button_primary_style, toggler::toggler_warp_style, ACCENT_COLOR};
@@ -33,8 +35,17 @@ impl Home {
     }
 
     pub fn view(&self) -> Element<'_, Message> {
-        let button_settings = button(
-            image("src/images/settings.png")
+        let settings_image: Handle = load_image("settings.png").unwrap_or_else(|| {
+            eprintln!("ERROR: Error loading settings image");
+            "".into()
+        });
+        let watermark_image: Handle = load_image("watermark.png").unwrap_or_else(|| {
+           eprintln!("ERROR: Error loading watermark image");
+            "".into()
+        });
+
+        let button_settings: Button<Message> = button(
+            image(settings_image)
                 .width(Length::Fixed(20.0))
                 .height(Length::Fill)
                 .content_fit(ContentFit::Contain)
@@ -43,7 +54,7 @@ impl Home {
             .on_press(OpenSettings);
 
         let bottom_container: Container<'_, Message, Theme> = container(row![
-            image("src/images/watermark.png")
+            image(watermark_image)
                 .width(Length::Fixed(30.0))
                 .height(Length::Fill)
                 .content_fit(ContentFit::Contain),

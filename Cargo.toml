@@ -5,6 +5,8 @@ edition = "2021"
 
 [dependencies]
 iced = { version = "0.13.1", features = ["debug", "image"] }
+rust-embed = "8.5.0"
+bytes = "1.7.2"
 
 
 [build-dependencies]
