@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 use std::process::{Command, Output};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Api {}
 
 impl Api {

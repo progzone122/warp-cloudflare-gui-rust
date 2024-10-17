@@ -1,0 +1,72 @@
+import { Button, HorizontalBox } from "std-widgets.slint";
+export component Item inherits Rectangle {
+    in property <string> value;
+    in property <bool> active;
+
+    callback choose;
+
+    height: 40px;
+    background: active ? #0F0F0F : #1F1F1F;
+    border-radius: 3px;
+    HorizontalBox {
+        alignment: start;
+
+        VerticalLayout {
+            alignment: center;
+            
+            Rectangle {
+                Text {
+                    text: value;
+                }
+            }
+        }
+    }
+    touch := TouchArea {
+        width: root.width;
+        height: root.height;
+        clicked => {
+            root.choose();
+        }
+    }
+
+}
+export component CustomComboBox {
+    in-out property <[string]> model;
+    in-out property <int> index;
+
+    callback choose;
+
+    Button {
+        width: 100%;
+        text: model[index];
+
+        clicked => {
+            popup1.show();
+        }
+    }
+    popup1 := PopupWindow {
+        x: 0;
+        y: -4px;
+        width: root.width;
+        height: 200px;
+        close-on-click: true;
+
+        Rectangle {
+            background: #2C2C2C;
+            border-radius: 8px;
+
+            VerticalLayout {
+                padding: 10px;
+                spacing: 10px;
+                for value[index] in root.model : Item {
+                    value: value;
+                    active: root.index == index ? true : false;
+                    choose => {
+                        root.index = index;
+                        root.choose();
+                    }
+                }
+            }
+        }
+    }
+}

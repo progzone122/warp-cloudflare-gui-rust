@@ -8,25 +8,41 @@ use crate::Message::OpenSettings;
 use crate::theme::{button::button_primary_style, toggler::toggler_warp_style, ACCENT_COLOR};
 use crate::theme::container::bottom_container_style;
 
+#[derive(Clone, Debug)]
 pub struct Home {
     pub status: bool,
+    api: Api,
+    //images
+    settings_image: Handle,
+    watermark_image: Handle
 }
 
 impl Home {
     pub fn new(status: bool) -> Self {
-        Self { status }
+        Self { 
+            status, 
+            api: Api::new(),
+            settings_image: load_image("settings.png").unwrap_or_else(|| {
+                eprintln!("ERROR: Error loading settings image");
+                "".into()
+            }),
+            watermark_image: load_image("watermark.png").unwrap_or_else(|| {
+                eprintln!("ERROR: Error loading watermark image");
+                "".into()
+            }),
+
+        }
     }
 
     pub fn update(&mut self, message: Message) {
-        let api: Api = Api::new();
         match message {
             Message::SwitchStatus(new_state) => {
                 if new_state {
-                    api.connect();
+                    self.api.connect();
                 } else {
-                    api.disconnect();
+                    self.api.disconnect();
                 }
-                let api_status: bool = api.is_connected();
+                let api_status: bool = self.api.is_connected();
                 println!("Switching to {}", api_status);
                 self.status = api_status;
             }
@@ -35,17 +51,8 @@ impl Home {
     }
 
     pub fn view(&self) -> Element<'_, Message> {
-        let settings_image: Handle = load_image("settings.png").unwrap_or_else(|| {
-            eprintln!("ERROR: Error loading settings image");
-            "".into()
-        });
-        let watermark_image: Handle = load_image("watermark.png").unwrap_or_else(|| {
-           eprintln!("ERROR: Error loading watermark image");
-            "".into()
-        });
-
         let button_settings: Button<Message> = button(
-            image(settings_image)
+            image(self.settings_image.clone())
                 .width(Length::Fixed(20.0))
                 .height(Length::Fill)
                 .content_fit(ContentFit::Contain)
@@ -54,7 +61,7 @@ impl Home {
             .on_press(OpenSettings);
 
         let bottom_container: Container<'_, Message, Theme> = container(row![
-            image(watermark_image)
+            image(self.watermark_image.clone())
                 .width(Length::Fixed(30.0))
                 .height(Length::Fill)
                 .content_fit(ContentFit::Contain),

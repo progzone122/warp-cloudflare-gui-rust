@@ -16,6 +16,7 @@ struct App {
     current_page: Page,
     theme: Theme,
     show_modal: bool,
+    api: Api
 }
 
 pub enum Page {
@@ -39,6 +40,7 @@ impl App {
             current_page: Page::Home(pages::home::Home::new(api.is_connected())),
             theme: Theme::default(),
             show_modal: false,
+            api
         }
     }
     fn update(&mut self, message: Message) -> Task<Message> {
