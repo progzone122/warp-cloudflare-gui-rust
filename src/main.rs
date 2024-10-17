@@ -2,17 +2,20 @@ pub mod theme;
 pub mod api;
 pub mod pages;
 pub mod embed;
+pub mod components;
 
-use iced::{Element, Task, Theme};
+use iced::{widget, Element, Task, Theme};
 use iced::application::View;
+use iced::widget::{button, center, text, text_input, Column};
 use iced::window::Settings;
 use crate::api::Api;
+use crate::components::error;
 use crate::theme::{ACCENT_COLOR, PALETTE};
-use embed::Images;
 
 struct App {
     current_page: Page,
-    theme: Theme
+    theme: Theme,
+    show_modal: bool,
 }
 
 pub enum Page {
@@ -24,7 +27,9 @@ pub enum Page {
 enum Message {
     SwitchStatus(bool),
     OpenSettings,
-    BackToHome
+    BackToHome,
+    ShowModal,
+    ErrorOkPressed
 }
 
 impl App {
@@ -32,7 +37,8 @@ impl App {
         let api: Api = Api::new();
         Self {
             current_page: Page::Home(pages::home::Home::new(api.is_connected())),
-            theme: Theme::default()
+            theme: Theme::default(),
+            show_modal: false,
         }
     }
     fn update(&mut self, message: Message) -> Task<Message> {
@@ -51,13 +57,32 @@ impl App {
                 }
             }
         }
+        match message {
+            Message::ShowModal => {
+                self.show_modal = true;
+            }
+            Message::ErrorOkPressed => {
+                self.show_modal = false;
+            }
+            _ => {}
+        }
         Task::none()
     }
     fn view(&self) -> Element<'_, Message> {
+        let mut content = Column::new().spacing(20);
+
         match &self.current_page {
-            Page::Home(home) => home.view(),
-            Page::Settings(settings) => settings.view()
+            Page::Home(home) => content = content.push(home.view()),
+            Page::Settings(settings) => content = content.push(settings.view())
         }
+
+        content = content.push(button(text("Show Modal")).on_press(Message::ShowModal));
+
+        if self.show_modal {
+            return error::show(content, Message::ErrorOkPressed);
+        }
+
+        content.into()
     }
     fn theme(&self) -> Theme {
         Theme::custom("Custom".to_string(), PALETTE)
