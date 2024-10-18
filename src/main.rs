@@ -44,7 +44,6 @@ impl App {
         }
     }
     fn update(&mut self, message: Message) -> Task<Message> {
-        let api: Api = Api::new();
         match &mut self.current_page {
             Page::Home(home) => {
                 home.update(message);
@@ -55,7 +54,7 @@ impl App {
             Page::Settings(settings) => {
                 settings.update(message);
                 if let Message::BackToHome = message {
-                    self.current_page = Page::Home(pages::home::Home::new(api.is_connected()));
+                    self.current_page = Page::Home(pages::home::Home::new(self.api.is_connected()));
                 }
             }
         }

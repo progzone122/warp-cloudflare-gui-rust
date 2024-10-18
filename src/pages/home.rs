@@ -1,6 +1,8 @@
+use std::sync::Mutex;
 use iced::{Alignment, ContentFit, Element, Font, Length, Padding, Theme};
 use iced::widget::{button, column, container, image, row, text, toggler, Button, Container, Image};
 use iced::widget::image::Handle;
+use lazy_static::lazy_static;
 use crate::api::Api;
 use crate::embed::load_image;
 use crate::Message;
@@ -8,29 +10,29 @@ use crate::Message::OpenSettings;
 use crate::theme::{button::button_primary_style, toggler::toggler_warp_style, ACCENT_COLOR};
 use crate::theme::container::bottom_container_style;
 
+lazy_static! {
+    static ref SETTINGS_IMAGE: Mutex<Handle> = Mutex::new(load_image("settings.png").unwrap_or_else(|| {
+        eprintln!("ERROR: Error loading settings image");
+        "".into()
+    }));
+
+    static ref WATERMARK_IMAGE: Mutex<Handle> = Mutex::new(load_image("watermark.png").unwrap_or_else(|| {
+        eprintln!("ERROR: Error loading watermark image");
+        "".into()
+    }));
+}
+
 #[derive(Clone, Debug)]
 pub struct Home {
     pub status: bool,
     api: Api,
-    //images
-    settings_image: Handle,
-    watermark_image: Handle
 }
 
 impl Home {
     pub fn new(status: bool) -> Self {
         Self { 
             status, 
-            api: Api::new(),
-            settings_image: load_image("settings.png").unwrap_or_else(|| {
-                eprintln!("ERROR: Error loading settings image");
-                "".into()
-            }),
-            watermark_image: load_image("watermark.png").unwrap_or_else(|| {
-                eprintln!("ERROR: Error loading watermark image");
-                "".into()
-            }),
-
+            api: Api::new()
         }
     }
 
@@ -52,7 +54,7 @@ impl Home {
 
     pub fn view(&self) -> Element<'_, Message> {
         let button_settings: Button<Message> = button(
-            image(self.settings_image.clone())
+            image(SETTINGS_IMAGE.lock().unwrap().clone())
                 .width(Length::Fixed(20.0))
                 .height(Length::Fill)
                 .content_fit(ContentFit::Contain)
@@ -61,7 +63,7 @@ impl Home {
             .on_press(OpenSettings);
 
         let bottom_container: Container<'_, Message, Theme> = container(row![
-            image(self.watermark_image.clone())
+            image(WATERMARK_IMAGE.lock().unwrap().clone())
                 .width(Length::Fixed(30.0))
                 .height(Length::Fill)
                 .content_fit(ContentFit::Contain),
