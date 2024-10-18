@@ -1,8 +1,8 @@
-use std::sync::Mutex;
+use std::cell::OnceCell;
+use std::sync::{Mutex, OnceLock};
 use iced::{Alignment, ContentFit, Element, Font, Length, Padding, Theme};
 use iced::widget::{button, column, container, image, row, text, toggler, Button, Container, Image};
 use iced::widget::image::Handle;
-use lazy_static::lazy_static;
 use crate::api::Api;
 use crate::embed::load_image;
 use crate::Message;
@@ -10,16 +10,22 @@ use crate::Message::OpenSettings;
 use crate::theme::{button::button_primary_style, toggler::toggler_warp_style, ACCENT_COLOR};
 use crate::theme::container::bottom_container_style;
 
-lazy_static! {
-    static ref SETTINGS_IMAGE: Mutex<Handle> = Mutex::new(load_image("settings.png").unwrap_or_else(|| {
-        eprintln!("ERROR: Error loading settings image");
-        "".into()
-    }));
+static SETTINGS_IMAGE: OnceLock<Handle> = OnceLock::new();
+static WATERMARK_IMAGE: OnceLock<Handle> = OnceLock::new();
 
-    static ref WATERMARK_IMAGE: Mutex<Handle> = Mutex::new(load_image("watermark.png").unwrap_or_else(|| {
-        eprintln!("ERROR: Error loading watermark image");
-        "".into()
-    }));
+fn load_images() {
+    SETTINGS_IMAGE.get_or_init(|| {
+        load_image("settings.png").unwrap_or_else(|| {
+            eprintln!("ERROR: Error loading settings image");
+            "".into()
+        })
+    });
+    WATERMARK_IMAGE.get_or_init(|| {
+        load_image("watermark.png").unwrap_or_else(|| {
+            eprintln!("ERROR: Error loading watermark image");
+            "".into()
+        })
+    });
 }
 
 #[derive(Clone, Debug)]
@@ -30,6 +36,7 @@ pub struct Home {
 
 impl Home {
     pub fn new(status: bool) -> Self {
+        load_images();
         Self { 
             status, 
             api: Api::new()
@@ -53,8 +60,11 @@ impl Home {
     }
 
     pub fn view(&self) -> Element<'_, Message> {
+        let settings_image_handle = SETTINGS_IMAGE.get().expect("Failed to load settings image");
+        let watermark_image_handle = WATERMARK_IMAGE.get().expect("Failed to load watermark image");
+
         let button_settings: Button<Message> = button(
-            image(SETTINGS_IMAGE.lock().unwrap().clone())
+            image(settings_image_handle.clone())
                 .width(Length::Fixed(20.0))
                 .height(Length::Fill)
                 .content_fit(ContentFit::Contain)
@@ -63,7 +73,7 @@ impl Home {
             .on_press(OpenSettings);
 
         let bottom_container: Container<'_, Message, Theme> = container(row![
-            image(WATERMARK_IMAGE.lock().unwrap().clone())
+            image(watermark_image_handle.clone())
                 .width(Length::Fixed(30.0))
                 .height(Length::Fill)
                 .content_fit(ContentFit::Contain),
