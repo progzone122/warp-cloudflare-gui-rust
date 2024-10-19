@@ -2,12 +2,9 @@ use std::clone::Clone;
 use std::default::Default;
 use std::process::Command;
 use std::sync::OnceLock;
-use iced::{event, mouse, touch, Alignment, ContentFit, Element, Length, Padding};
-use iced::advanced::graphics::text::cosmic_text::Align;
-use iced::advanced::{Layout, Shell, Widget};
-use iced::ContentFit::{Contain, Cover};
-use iced::keyboard::key::Named::Link;
-use iced::widget::{button, column, horizontal_rule, image, row, text, toggler, Button, Column, Row};
+use iced::{Alignment, Element, Length};
+use iced::advanced::{ Widget};
+use iced::widget::{button, column, horizontal_rule, image, row, text, Column, Row};
 use iced::widget::image::Handle;
 use crate::api::Api;
 use crate::components::modal::{Modal, TypeModal};
@@ -106,6 +103,7 @@ impl Settings {
                     match self.api.delete_account() {
                         Ok(res) => {}
                         Err(e) => {
+                            self.modal.show(TypeModal::Error, &format!("Failed to register account ({})", e));
                             eprintln!("Error: Failed to delete account ({})", e);
                         }
                     }
@@ -183,7 +181,7 @@ impl Settings {
             .into();
 
         if self.modal.show {
-            Modal::show_modal(content, Message::ErrorOkPressed)
+            self.modal.show_modal(content, Message::ErrorOkPressed)
         } else {
             content
         }

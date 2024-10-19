@@ -4,14 +4,13 @@ pub mod pages;
 pub mod embed;
 pub mod components;
 
-use iced::{widget, Element, Task, Theme};
+use iced::{Element, Task, Theme};
 use iced::application::View;
-use iced::widget::{button, center, text, text_input, Column};
+use iced::widget::{Column};
 use iced::window::Settings;
 use crate::api::Api;
-use crate::components::modal;
 use crate::components::modal::Modal;
-use crate::theme::{ACCENT_COLOR, PALETTE};
+use crate::theme::{PALETTE};
 
 struct App {
     current_page: Page,
@@ -79,10 +78,8 @@ impl App {
             )
         };
 
-        // content = content.push(button(text("Show Modal")).on_press(Message::ShowModal));
-
         if self.modal.show {
-            return Modal::show_modal(content, Message::ErrorOkPressed);
+            return self.modal.show_modal(content, Message::ErrorOkPressed);
         }
 
         content.into()

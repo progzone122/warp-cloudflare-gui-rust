@@ -48,6 +48,7 @@ impl Modal {
     }
 
     pub fn show_modal<'a, Message>(
+        &self,
         base: impl Into<Element<'a, Message>>,
         on_close: Message,
     ) -> Element<'a, Message>
@@ -80,7 +81,7 @@ impl Modal {
                                     .push(
                                         Column::new()
                                             .push(Text::new("ERROR"))
-                                            .push(Text::new("Error message"))
+                                            .push(Text::new(format!("{}", self.text)))
                                             .spacing(5)
                                     )
                                     .spacing(13)
