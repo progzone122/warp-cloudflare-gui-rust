@@ -26,12 +26,16 @@ pub enum Page {
 
 #[derive(Debug, Clone)]
 enum Message {
+    // Home
     SwitchStatus(bool),
     OpenSettings,
+    // Settings
     BackToHome,
+    SettingsLinkIconPressed(String),
+    AccountRegister(bool),
+    // Error Modal
     ShowModal,
-    ErrorOkPressed,
-    SettingsLinkIconPressed(String)
+    ErrorOkPressed
 }
 
 impl App {
