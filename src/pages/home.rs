@@ -1,24 +1,15 @@
 use std::sync::{OnceLock};
 use iced::{Alignment, Color, ContentFit, Element, Font, Length, Padding, Theme};
-use iced::widget::{button, column, container, image, row, text, toggler, Button, Container, Image};
+use iced::widget::{button, column, container, image, row, text, toggler, Button, Container};
 use iced::widget::image::Handle;
 use crate::api::Api;
-use crate::embed;
+use crate::embed::get_image;
 use crate::Message;
 use crate::Message::OpenSettings;
 use crate::theme::{button::button_primary_style, toggler::toggler_warp_style, ACCENT_COLOR};
 
 static SETTINGS_IMAGE: OnceLock<Handle> = OnceLock::new();
 static WATERMARK_IMAGE: OnceLock<Handle> = OnceLock::new();
-
-fn load_image(cell: &OnceLock<Handle>, path: &str) {
-    cell.get_or_init(|| {
-        embed::load_image(path).unwrap_or_else(|| {
-            eprintln!("ERROR: Error loading image: {}", path);
-            "".into()
-        })
-    });
-}
 
 #[derive(Clone, Debug)]
 pub struct Home {
@@ -28,8 +19,8 @@ pub struct Home {
 
 impl Home {
     pub fn new(status: bool) -> Self {
-        load_image(&SETTINGS_IMAGE, "settings.png");
-        load_image(&WATERMARK_IMAGE, "watermark.png");
+        get_image(&SETTINGS_IMAGE, "settings.png");
+        get_image(&WATERMARK_IMAGE, "watermark.png");
         Self {
             status, 
             api: Api::new()
