@@ -24,14 +24,14 @@ pub enum Page {
     Settings(pages::settings::Settings)
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 enum Message {
     SwitchStatus(bool),
     OpenSettings,
     BackToHome,
     ShowModal,
     ErrorOkPressed,
-    ImageClicked
+    SettingsLinkIconPressed(String)
 }
 
 impl App {
@@ -54,13 +54,13 @@ impl App {
             }
             _ => match &mut self.current_page {
                 Page::Home(home) => {
-                    home.update(message);
+                    home.update(message.clone());
                     if let Message::OpenSettings = message {
                         self.current_page = Page::Settings(pages::settings::Settings::new());
                     }
                 }
                 Page::Settings(settings) => {
-                    settings.update(message);
+                    settings.update(message.clone());
                     if let Message::BackToHome = message {
                         self.current_page = Page::Home(pages::home::Home::new(self.api.is_connected()));
                     }
