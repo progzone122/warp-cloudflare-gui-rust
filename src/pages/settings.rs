@@ -1,4 +1,4 @@
-use iced::{Element, Padding};
+use iced::{Element, Length, Padding};
 use iced::widget::{button, column, image, text, toggler};
 use crate::Message;
 use crate::theme::button::button_primary_style;
@@ -28,6 +28,8 @@ impl Settings {
             ]
                 .spacing(10)
         ]
+            .width(Length::Fill)
+            .height(Length::Fill)
             .padding(20)
             .spacing(30)
             .into()

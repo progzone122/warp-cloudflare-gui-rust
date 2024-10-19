@@ -2,7 +2,6 @@ use iced::{Color};
 
 pub mod button;
 pub mod toggler;
-pub mod container;
 
 /// Colors
 pub const PRIMARY_COLOR: Color = Color::from_rgb(25.0 / 255.0, 25.0 / 255.0, 25.0 / 255.0);

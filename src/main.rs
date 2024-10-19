@@ -44,20 +44,6 @@ impl App {
         }
     }
     fn update(&mut self, message: Message) -> Task<Message> {
-        match &mut self.current_page {
-            Page::Home(home) => {
-                home.update(message);
-                if let Message::OpenSettings = message {
-                    self.current_page = Page::Settings(pages::settings::Settings::new());
-                }
-            }
-            Page::Settings(settings) => {
-                settings.update(message);
-                if let Message::BackToHome = message {
-                    self.current_page = Page::Home(pages::home::Home::new(self.api.is_connected()));
-                }
-            }
-        }
         match message {
             Message::ShowModal => {
                 self.show_modal = true;
@@ -65,17 +51,28 @@ impl App {
             Message::ErrorOkPressed => {
                 self.show_modal = false;
             }
-            _ => {}
+            _ => match &mut self.current_page {
+                Page::Home(home) => {
+                    home.update(message);
+                    if let Message::OpenSettings = message {
+                        self.current_page = Page::Settings(pages::settings::Settings::new());
+                    }
+                }
+                Page::Settings(settings) => {
+                    settings.update(message);
+                    if let Message::BackToHome = message {
+                        self.current_page = Page::Home(pages::home::Home::new(self.api.is_connected()));
+                    }
+                }
+            }
         }
         Task::none()
     }
     fn view(&self) -> Element<'_, Message> {
-        let mut content = Column::new().spacing(20);
-
-        match &self.current_page {
-            Page::Home(home) => content = content.push(home.view()),
-            Page::Settings(settings) => content = content.push(settings.view())
-        }
+        let mut content = match &self.current_page {
+            Page::Home(home) => Column::new().spacing(20).push(home.view()),
+            Page::Settings(settings) => Column::new().spacing(20).push(settings.view())
+        };
 
         content = content.push(button(text("Show Modal")).on_press(Message::ShowModal));
 

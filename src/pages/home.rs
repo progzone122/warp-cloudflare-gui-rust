@@ -1,28 +1,20 @@
-use std::cell::OnceCell;
-use std::sync::{Mutex, OnceLock};
-use iced::{Alignment, ContentFit, Element, Font, Length, Padding, Theme};
+use std::sync::{OnceLock};
+use iced::{Alignment, Color, ContentFit, Element, Font, Length, Padding, Theme};
 use iced::widget::{button, column, container, image, row, text, toggler, Button, Container, Image};
 use iced::widget::image::Handle;
 use crate::api::Api;
-use crate::embed::load_image;
+use crate::embed;
 use crate::Message;
 use crate::Message::OpenSettings;
 use crate::theme::{button::button_primary_style, toggler::toggler_warp_style, ACCENT_COLOR};
-use crate::theme::container::bottom_container_style;
 
 static SETTINGS_IMAGE: OnceLock<Handle> = OnceLock::new();
 static WATERMARK_IMAGE: OnceLock<Handle> = OnceLock::new();
 
-fn load_images() {
-    SETTINGS_IMAGE.get_or_init(|| {
-        load_image("settings.png").unwrap_or_else(|| {
-            eprintln!("ERROR: Error loading settings image");
-            "".into()
-        })
-    });
-    WATERMARK_IMAGE.get_or_init(|| {
-        load_image("watermark.png").unwrap_or_else(|| {
-            eprintln!("ERROR: Error loading watermark image");
+fn load_image(cell: &OnceLock<Handle>, path: &str) {
+    cell.get_or_init(|| {
+        embed::load_image(path).unwrap_or_else(|| {
+            eprintln!("ERROR: Error loading image: {}", path);
             "".into()
         })
     });
@@ -36,8 +28,9 @@ pub struct Home {
 
 impl Home {
     pub fn new(status: bool) -> Self {
-        load_images();
-        Self { 
+        load_image(&SETTINGS_IMAGE, "settings.png");
+        load_image(&WATERMARK_IMAGE, "watermark.png");
+        Self {
             status, 
             api: Api::new()
         }
@@ -51,9 +44,8 @@ impl Home {
                 } else {
                     self.api.disconnect();
                 }
-                let api_status: bool = self.api.is_connected();
-                println!("Switching to {}", api_status);
-                self.status = api_status;
+                self.status = self.api.is_connected();
+                println!("Switching to {}", self.status);
             }
             _ => {}
         }
@@ -98,7 +90,12 @@ impl Home {
                 bottom: 5.0,
                 ..Padding::default()
             })
-            .style(bottom_container_style);
+            .style(|theme_| {
+                container::Style {
+                    background: Some(iced::Background::Color(Color::from_rgb8(49, 52, 53))),
+                    ..container::Style::default()
+                }
+            });
 
         let toggler = toggler(self.status)
             .on_toggle(|state| Message::SwitchStatus(state));
