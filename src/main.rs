@@ -15,7 +15,7 @@ use crate::theme::{ACCENT_COLOR, PALETTE};
 struct App {
     current_page: Page,
     theme: Theme,
-    show_modal: bool,
+    show_error: bool,
     api: Api
 }
 
@@ -39,17 +39,17 @@ impl App {
         Self {
             current_page: Page::Home(pages::home::Home::new(api.is_connected())),
             theme: Theme::default(),
-            show_modal: false,
+            show_error: true,
             api
         }
     }
     fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::ShowModal => {
-                self.show_modal = true;
+                self.show_error = true;
             }
             Message::ErrorOkPressed => {
-                self.show_modal = false;
+                self.show_error = false;
             }
             _ => match &mut self.current_page {
                 Page::Home(home) => {
@@ -74,9 +74,9 @@ impl App {
             Page::Settings(settings) => Column::new().spacing(20).push(settings.view())
         };
 
-        content = content.push(button(text("Show Modal")).on_press(Message::ShowModal));
+        // content = content.push(button(text("Show Modal")).on_press(Message::ShowModal));
 
-        if self.show_modal {
+        if self.show_error {
             return error::show(content, Message::ErrorOkPressed);
         }
 

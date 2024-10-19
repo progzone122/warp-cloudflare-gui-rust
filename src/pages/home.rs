@@ -1,6 +1,6 @@
 use std::sync::{OnceLock};
 use iced::{Alignment, Color, ContentFit, Element, Font, Length, Padding, Theme};
-use iced::widget::{button, column, container, image, row, text, toggler, Button, Container};
+use iced::widget::{button, column, container, image, row, text, toggler, Button, Container, Toggler};
 use iced::widget::image::Handle;
 use crate::api::Api;
 use crate::embed::get_image;
@@ -43,8 +43,8 @@ impl Home {
     }
 
     pub fn view(&self) -> Element<'_, Message> {
-        let settings_image_handle = SETTINGS_IMAGE.get().expect("Failed to load settings image");
-        let watermark_image_handle = WATERMARK_IMAGE.get().expect("Failed to load watermark image");
+        let settings_image_handle: &Handle = SETTINGS_IMAGE.get().expect("Failed to load settings image");
+        let watermark_image_handle: &Handle = WATERMARK_IMAGE.get().expect("Failed to load watermark image");
 
         let button_settings: Button<Message> = button(
             image(settings_image_handle.clone())
@@ -88,7 +88,7 @@ impl Home {
                 }
             });
 
-        let toggler = toggler(self.status)
+        let toggler: Toggler<Message> = toggler(self.status)
             .on_toggle(|state| Message::SwitchStatus(state));
 
         column![
