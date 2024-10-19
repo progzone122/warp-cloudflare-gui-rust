@@ -1,5 +1,6 @@
 use std::sync::{OnceLock};
 use iced::{Alignment, Color, ContentFit, Element, Font, Length, Padding, Theme};
+use iced::font::Weight;
 use iced::widget::{button, column, container, image, row, text, toggler, Button, Container, Toggler};
 use iced::widget::image::Handle;
 use crate::api::Api;
@@ -23,7 +24,7 @@ impl Home {
         get_image(&SETTINGS_IMAGE, "settings.png");
         get_image(&WATERMARK_IMAGE, "watermark.png");
         Self {
-            status, 
+            status,
             api: Api::new()
         }
     }
@@ -96,7 +97,10 @@ impl Home {
             column![
                 text("WARP")
                     .size(50)
-                    .font(Font::DEFAULT)
+                    .font(Font {
+                        weight: Weight::Bold,
+                        ..Font::DEFAULT
+                    })
                     .color(ACCENT_COLOR),
                 toggler.style(toggler_warp_style).size(80),
                 text(if self.status { "Connected" } else { "Disconnected" }),

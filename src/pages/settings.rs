@@ -1,4 +1,5 @@
 use std::clone::Clone;
+use std::default::Default;
 use std::process::Command;
 use std::sync::OnceLock;
 use iced::{event, mouse, touch, Alignment, ContentFit, Element, Length, Padding};
@@ -8,13 +9,18 @@ use iced::ContentFit::{Contain, Cover};
 use iced::keyboard::key::Named::Link;
 use iced::widget::{button, column, horizontal_rule, image, row, text, toggler, Button, Column, Row};
 use iced::widget::image::Handle;
-use iced::widget::shader::wgpu::naga::SwitchValue::Default;
+use crate::api::Api;
+use crate::components::modal::{Modal, TypeModal};
 use crate::embed::get_image;
-use crate::Message;
 use crate::theme::button::{button_icon_style, button_primary_style};
 
-pub struct Settings {
-    icons: LinksIcons
+
+#[derive(Clone, Debug)]
+pub enum Message {
+    BackToHome,
+    SettingsLinkIconPressed(String),
+    AccountRegister(bool), // true - register, false - delete
+    ErrorOkPressed
 }
 
 struct LinkIcon {
@@ -60,13 +66,23 @@ impl LinksIcons {
     }
 }
 
+pub struct Settings {
+    icons: LinksIcons,
+    api: Api,
+    modal: Modal
+}
+
 impl Settings {
     pub fn new() -> Self {
         let icons: LinksIcons = LinksIcons::new();
         icons.init();
 
+        let api: Api = Api::new();
+
         Self {
-            icons
+            icons,
+            api,
+            modal: Modal::default(),
         }
     }
 
@@ -77,11 +93,31 @@ impl Settings {
                     eprintln!("Error: Failed to open link ({})", e);
                 }
             }
+            Message::AccountRegister(action) => {
+                if action {
+                    match self.api.register_account() {
+                        Ok(res) => {}
+                        Err(e) => {
+                            self.modal.show(TypeModal::Error, &format!("Failed to register account ({})", e));
+                            eprintln!("Error: Failed to register account ({})", e);
+                        }
+                    }
+                } else {
+                    match self.api.delete_account() {
+                        Ok(res) => {}
+                        Err(e) => {
+                            eprintln!("Error: Failed to delete account ({})", e);
+                        }
+                    }
+                }
+            }
+            Message::ErrorOkPressed => self.modal.hide(),
             _ => {}
         }
     }
 
     pub fn view(&self) -> Element<'_, Message> {
+
         let icon_handles: [LinkIcon; 4] = self.icons.get_icons();
 
         let mut icons_link_row: Row<Message> = Row::new()
@@ -109,7 +145,7 @@ impl Settings {
             .align_x(Alignment::Center)
             .push(icons_link_row);
 
-        column![
+        let mut content: Element<Message> = column![
             button("Back")
                 .style(button_primary_style)
                 .on_press(Message::BackToHome),
@@ -130,10 +166,10 @@ impl Settings {
                                 .style(button_primary_style)
                                 .on_press(Message::AccountRegister(false))
                         ]
-                            .spacing(15)
+                            .spacing(10)
                     ]
                         .width(Length::Fill)
-                        .align_x(Alignment::Center)
+                        .align_x(Alignment::End)
                 ]
                     .align_y(Alignment::Center),
             ]
@@ -144,6 +180,12 @@ impl Settings {
             .height(Length::Fill)
             .padding(20)
             .spacing(30)
-            .into()
+            .into();
+
+        if self.modal.show {
+            Modal::show_modal(content, Message::ErrorOkPressed)
+        } else {
+            content
+        }
     }
 }
