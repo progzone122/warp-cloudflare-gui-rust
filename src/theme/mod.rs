@@ -14,6 +14,10 @@ pub const DEFAULT_BUTTON_RADIUS: f32 = 5.0;
 pub const DEFAULT_BORDER_WIDTH: f32 = 3.0;
 pub const DEFAULT_BORDER_RADIUS: f32 = 10.0;
 
+//
+pub const ICON_BUTTON_RADIUS: f32 = 30.0;
+//
+
 /// Warp toggler settings
 pub const DEFAULT_TOGGLER_WARP_BACKGROUND_RADIUS: f32 = 5.0;
 

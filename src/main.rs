@@ -30,7 +30,8 @@ enum Message {
     OpenSettings,
     BackToHome,
     ShowModal,
-    ErrorOkPressed
+    ErrorOkPressed,
+    ImageClicked
 }
 
 impl App {
@@ -39,7 +40,7 @@ impl App {
         Self {
             current_page: Page::Home(pages::home::Home::new(api.is_connected())),
             theme: Theme::default(),
-            show_error: true,
+            show_error: false,
             api
         }
     }
