@@ -2,7 +2,12 @@
 A GUI application based on warp-cli for linux written in Rust
 
 ## Screenshots
-![1720103650_grim](https://github.com/progzone122/warp-cloudflare-gui-rust/assets/80642969/def8c5ad-7628-4ada-a15b-3cbe1f068499) ![1720103658_grim](https://github.com/progzone122/warp-cloudflare-gui-rust/assets/80642969/6c47a077-0a78-4769-842d-dafd4fbdf5dc) ![1720103690_grim](https://github.com/progzone122/warp-cloudflare-gui-rust/assets/80642969/fed130a5-b058-4b36-a4e0-d79a9d21e2e9)
+
+![1729435264_grim](https://github.com/user-attachments/assets/6e2d3bdb-b13f-4491-a071-f95141dadec1)
+![1729435273_grim](https://github.com/user-attachments/assets/8de1de84-fe55-4153-9672-d880f90eef39)
+![1729435282_grim](https://github.com/user-attachments/assets/d5bfa816-ca19-461a-a303-8559b25869f7)
+![1729435290_grim](https://github.com/user-attachments/assets/311d553f-cb99-4637-8989-1b0286497247)
+
 
 
 ## Installation Guide
