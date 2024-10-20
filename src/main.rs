@@ -30,7 +30,6 @@ enum Message {
     // Home
     SwitchStatus(bool),
     OpenSettings,
-    // Settings
     // Modal
     ShowModal,
     ErrorOkPressed,

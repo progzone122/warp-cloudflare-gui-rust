@@ -7,7 +7,7 @@ use crate::api::Api;
 use crate::embed::get_image;
 use crate::Message;
 use crate::Message::OpenSettings;
-use crate::theme::{button::button_primary_style, toggler::toggler_warp_style, ACCENT_COLOR};
+use crate::theme::{toggler::toggler_warp_style, ACCENT_COLOR};
 use crate::theme::button::button_icon_style;
 
 static SETTINGS_IMAGE: OnceLock<Handle> = OnceLock::new();
