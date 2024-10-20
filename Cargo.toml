@@ -1,13 +1,15 @@
 [package]
 name = "warp-cloudflare-gui-rust"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 
 [dependencies]
-slint = { version = "1.6.0", default-features = false, features = ["backend-qt", "renderer-femtovg", "compat-1-2"] }
+iced = { version = "0.13.1", features = ["image", "advanced"] }
+rust-embed = "8.5.0"
+bytes = "1.7.2"
+
 
 [build-dependencies]
-slint-build = "1.6.0"
 
 [profile.release]
 opt-level = "z"
