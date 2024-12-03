@@ -2,30 +2,30 @@
   import { invoke } from "@tauri-apps/api/core";
   import SwitchComponent from "./components/SwitchComponent.svelte";
 
-  let switch1Ref: boolean = false;
+  let is_connected: boolean = false;
+  let switch1Loading: boolean = false;
 
-  // async function greet(event: Event) {
-  //   event.preventDefault();
-  //   // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-  //   greetMsg = await invoke("greet", { name });
-  // }
-
-  const switch1Handle = (state: CustomEvent) => {
-    if (state.detail) {
-      
+  const switch1Handle = async (state: CustomEvent) => {
+    switch1Loading = true;
+    try {
+      await invoke(state.detail ? "connect_api" : "disconnect_api");
+      is_connected = await invoke("is_connected_api");
+    } catch (e) {
+      console.error(e);
     }
+    switch1Loading = false;
   }
 </script>
 
 <div class="w-full h-screen">
-  <div class="w-full flex flex-col gap-4 items-center py-5">
+  <div class="w-full flex flex-col gap-4 items-center py-8">
     <h1 class="text-6xl font-extrabold bg-gradient-to-r from-orange-600 via-orange-700 to-orange-400 bg-clip-text text-transparent">
       WARP
     </h1>
-
-    <h1>Состояние переключателя: {switch1Ref ? 'Включен' : 'Выключен'}</h1>
+    {is_connected}
     <SwitchComponent
-            bind:isChecked={switch1Ref}
+            bind:isChecked={is_connected}
+            bind:loading={switch1Loading}
             on:change={switch1Handle}/>
   </div>
 </div>
