@@ -14,7 +14,8 @@
   "license": "MIT",
   "dependencies": {
     "@tauri-apps/api": "^2.1.1",
-    "@tauri-apps/plugin-shell": "^2.0.1"
+    "@tauri-apps/plugin-shell": "^2.0.1",
+    "svelte-google-materialdesign-icons": "^1.0.5"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.6",
