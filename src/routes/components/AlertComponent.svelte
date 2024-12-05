@@ -1,9 +1,11 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    import { fade, scale } from 'svelte/transition';
 
     import BugReport from "svelte-google-materialdesign-icons/Bug_report.svelte";
     import CheckBox from "svelte-google-materialdesign-icons/Check_circle.svelte";
     import Close from "svelte-google-materialdesign-icons/Close.svelte";
+    import {cubicOut} from "svelte/easing";
 
     export let visible: boolean = false;
 
@@ -34,7 +36,8 @@
     };
 </script>
 {#if visible}
-    <div class="w-full p-2">
+    <div class="w-full p-2"
+         transition:scale={{duration: 300, easing: cubicOut}}>
         <div class="w-full flex gap-2 items-center p-2 rounded-lg border-2 { data.code !== 'Success' ? 'bg-red-700 border-red-900' :
                                                                              data.code === 'Success' ? 'bg-green-700 border-green-900' : ''}">
 
