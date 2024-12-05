@@ -27,7 +27,7 @@ pub struct Response {
 
 impl fmt::Display for Response {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Code: {:?}, Message: {}, Details: {}", self.code, self.message, self.details)
+        write!(f, "{}", self.details)
     }
 }
 impl From<AnyhowError> for Response {
