@@ -3,13 +3,48 @@ use std::process::{Command, Output};
 use std::sync::Mutex;
 use tauri::State;
 use anyhow::{anyhow, Result};
+use anyhow::Error as AnyhowError;
+use serde::Serialize;
+use std::fmt;
 
-// enum Api {
-//     Error,
-//     Connected,
-//     Connecting,
-//     Disconnected,
-// }
+#[derive(Serialize)]
+#[derive(Debug)]
+pub enum StatusCode {
+    UnknownError,
+    UnexpectedError,
+    ParsingError,
+    DaemonError,
+    Success,
+}
+
+#[derive(Serialize)]
+#[derive(Debug)]
+pub struct Response {
+    pub message: String,
+    pub details: String,
+    pub code: StatusCode,
+}
+
+impl fmt::Display for Response {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Code: {:?}, Message: {}, Details: {}", self.code, self.message, self.details)
+    }
+}
+impl From<AnyhowError> for Response {
+    fn from(err: AnyhowError) -> Self {
+        Response::new(StatusCode::UnknownError, "An error occurred", &format!("{:?}", err))
+    }
+}
+
+impl Response {
+    pub fn new(code: StatusCode, message: &str, details: &str) -> Self {
+        Self {
+            message: message.to_string(),
+            details: details.to_string(),
+            code,
+        }
+    }
+}
 
 #[derive(Clone, Copy, Debug)]
 pub struct Api {}
@@ -48,7 +83,7 @@ impl Api {
         }
         Ok(false)
     }
-    fn status(&self) -> Result<String> {
+    fn status(&self) -> Result<Response> {
         let result: Output = Command::new("sh")
             .arg("-c")
             .arg("warp-cli status")
@@ -61,24 +96,46 @@ impl Api {
 
             if parts.len() > 2 {
                 let lines: Vec<&str> = parts[2].split('\n').collect();
-                return Ok(lines[0].trim().to_string());
+                return Ok(Response::new(
+                    StatusCode::Success,
+                    "",
+                    lines[0].trim(),
+                ));
             } else if parts.len() > 1 {
                 let lines: Vec<&str> = parts[1].split('\n').collect();
-                return Ok(lines[0].trim().to_string());
+                return Ok(Response::new(
+                    StatusCode::Success,
+                    "",
+                    lines[0].trim(),
+                ));
             }
         } else {
             let stderr: Cow<str> = String::from_utf8_lossy(&result.stderr);
-            return Err(anyhow!(
-                "Command failed with error: {}",
-                stderr.trim()
-            ))
+
+            if stderr.contains("Connection refused (os error 111)") {
+                return Err(anyhow!(Response::new(
+                    StatusCode::DaemonError,
+                    "Unable to connect to the CloudflareWARP daemon. Maybe the daemon is not running?",
+                    stderr.as_ref(),
+                )));
+            } else {
+                return Err(anyhow!(Response::new(
+                    StatusCode::UnknownError,
+                    "Check the logs for details",
+                    stderr.as_ref(),
+                )));
+            }
         }
 
-        Err(anyhow::anyhow!("Unexpected error while parsing warp-cli output"))
+        Err(anyhow!(Response::new(
+            StatusCode::ParsingError,
+            "Unexpected error while parsing warp-cli output",
+            "No details available",
+        ).to_string()))
     }
     pub fn is_connected(&self) -> Result<bool> {
         let status = self.status()?; // Обрабатываем возможные ошибки
-        Ok(status == "Connecting" || status == "Connected")
+        Ok(status.details == "Connecting" || status.details == "Connected")
     }
 
     // pub fn get_mode(&self) -> i32 {
@@ -179,13 +236,13 @@ fn disconnect_api(api: State<Mutex<Api>>) -> bool {
 }
 
 #[tauri::command]
-fn status_api(api: State<Mutex<Api>>) -> String {
+fn status_api(api: State<Mutex<Api>>) -> Result<Response, Response> {
     let api = api.lock().unwrap();
     match api.status() {
-        Ok(status) => status,
+        Ok(resp) => Ok(resp),
         Err(err) => {
             eprintln!("Error getting status: {}", err);
-            "Error".to_string()
+            Err(err.into())
         }
     }
 }
