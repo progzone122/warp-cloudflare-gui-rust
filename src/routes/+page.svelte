@@ -15,6 +15,9 @@
 
   let alertRef: AlertComponent | null = null;
 
+  onMount(async () => {
+    is_connected = await invoke("is_connected_api");
+  })
 
   const switch1Handle = async (state: CustomEvent) => {
     switch1Loading = true;
@@ -32,7 +35,6 @@
         });
       }
       console.log(await invoke("status_api"))
-      // connectionStatus = is_connected ? "Connected" : showError(await invoke("status_api"));
     } catch (e) {
       console.error(e);
     }
@@ -48,7 +50,6 @@
     <h1 class="text-6xl font-extrabold bg-gradient-to-r from-orange-600 via-orange-700 to-orange-400 bg-clip-text text-transparent">
       WARP
     </h1>
-    {is_connected}
     <SwitchComponent
             bind:isChecked={is_connected}
             bind:loading={switch1Loading}

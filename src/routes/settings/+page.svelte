@@ -18,5 +18,13 @@
             on:click={() => goto("/")}>
         <Arrow_left size="24" />
     </button>
-    <h1 class="text-3xl">Version: {version ?? "x.x.x"}</h1>
+    <div class="w-full flex flex-col gap-2">
+        <h1 class="text-2xl font-bold">Version: {version ?? "x.x.x"}</h1>
+        <hr class="w-full h-1 mx-auto border-0 rounded md:my-10 dark:bg-gray-700">
+        <h1 class="text-2xl font-bold">Account: </h1>
+        <div class="flex gap-4">
+
+        </div>
+    </div>
+
 </div>
