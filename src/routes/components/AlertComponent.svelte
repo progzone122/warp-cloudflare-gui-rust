@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-    import { fade, scale } from 'svelte/transition';
+    import { scale } from 'svelte/transition';
 
     import BugReport from "svelte-google-materialdesign-icons/Bug_report.svelte";
     import CheckBox from "svelte-google-materialdesign-icons/Check_circle.svelte";
