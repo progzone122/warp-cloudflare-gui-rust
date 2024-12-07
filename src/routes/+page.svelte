@@ -28,14 +28,11 @@
         let st = await invoke("status_api");
         console.log(st);
       } catch (error) {
-        alertRef.showAlert({
-          code: error.code,
-          details: error.details,
-          message: error.message
-        });
+        alertRef.showAlert(e);
       }
       console.log(await invoke("status_api"))
     } catch (e) {
+      alertRef.showAlert(e);
       console.error(e);
     }
     switch1Loading = false;
