@@ -12,6 +12,7 @@ pub enum StatusCode {
     UnexpectedError,
     ParsingError,
     DaemonError,
+    RegisterAccountError,
     Success,
 }
 
@@ -170,47 +171,69 @@ impl Api {
     //         .output()
     //         .expect("failed to execute process");
     // }
-    //
-    // pub fn register_account(&self) -> Result<(), String> {
-    //     let result: Output = Command::new("sh")
-    //         .arg("-c")
-    //         .arg("warp-cli registration new")
-    //         .output()
-    //         .expect("failed to execute process");
-    //
-    //     return if result.status.success() {
-    //         let result: Cow<str> = String::from_utf8_lossy(&result.stdout);
-    //         let parts: Vec<&str> = result.split("\n").collect();
-    //
-    //         if parts[0] == "Success" {
-    //             Ok(())
-    //         } else {
-    //             Err(result.to_string())
-    //         }
-    //     } else {
-    //         let error: Cow<str> = String::from_utf8_lossy(&result.stderr);
-    //         Err(error.to_string())
-    //     }
-    // }
-    // pub fn delete_account(&self) -> Result<(), String> {
-    //     let result: Output = Command::new("sh")
-    //         .arg("-c")
-    //         .arg("warp-cli registration delete")
-    //         .output()
-    //         .expect("failed to execute process");
-    //
-    //     return if result.status.success() {
-    //         let result: Cow<str> = String::from_utf8_lossy(&result.stdout);
-    //         let parts: Vec<&str> = result.split("\n").collect();
-    //
-    //         if parts[0] == "Success" {
-    //             Ok(())
-    //         } else {
-    //             Err(result.to_string())
-    //         }
-    //     } else {
-    //         let error: Cow<str> = String::from_utf8_lossy(&result.stderr);
-    //         Err(error.to_string())
-    //     }
-    // }
+
+    pub fn register_account(&self) -> Result<Response> {
+        let result: Output = Command::new("sh")
+            .arg("-c")
+            .arg("warp-cli registration new")
+            .output()
+            .expect("failed to execute process");
+
+        return if result.status.success() {
+            let result: Cow<str> = String::from_utf8_lossy(&result.stdout);
+            let parts: Vec<&str> = result.split("\n").collect();
+
+            if parts[0] == "Success" {
+                Ok(Response::new(
+                    StatusCode::Success,
+                    "Register account",
+                    "Successful account registration"))
+            } else {
+                Err(anyhow!(Response::new(
+                    StatusCode::RegisterAccountError,
+                    "Register account failed",
+                    result.to_string().as_ref(),
+                )))
+            }
+        } else {
+            let error: Cow<str> = String::from_utf8_lossy(&result.stderr);
+            Err(anyhow!(Response::new(
+                StatusCode::UnknownError,
+                "Error",
+                error.to_string().as_ref()
+            )))
+        }
+    }
+    pub fn delete_account(&self) -> Result<Response> {
+        let result: Output = Command::new("sh")
+            .arg("-c")
+            .arg("warp-cli registration delete")
+            .output()
+            .expect("failed to execute process");
+
+        return if result.status.success() {
+            let result: Cow<str> = String::from_utf8_lossy(&result.stdout);
+            let parts: Vec<&str> = result.split("\n").collect();
+
+            if parts[0] == "Success" {
+                Ok(Response::new(
+                    StatusCode::Success,
+                    "Account deletion",
+                    "Successful account deletion"))
+            } else {
+                Err(anyhow!(Response::new(
+                    StatusCode::RegisterAccountError,
+                    "Deletion account failed",
+                    result.to_string().as_ref(),
+                )))
+            }
+        } else {
+            let error: Cow<str> = String::from_utf8_lossy(&result.stderr);
+            Err(anyhow!(Response::new(
+                StatusCode::UnknownError,
+                "Error",
+                error.to_string().as_ref()
+            )))
+        }
+    }
 }

@@ -56,17 +56,29 @@ fn is_connected_api(api: State<Mutex<Api>>) -> bool {
 //     api.set_mode(&mode);
 // }
 //
-// #[tauri::command]
-// fn register_account_api(api: State<Mutex<Api>>) -> Result<(), String> {
-//     let api = api.lock().unwrap();
-//     api.register_account()
-// }
-//
-// #[tauri::command]
-// fn delete_account_api(api: State<Mutex<Api>>) -> Result<(), String> {
-//     let api = api.lock().unwrap();
-//     api.delete_account()
-// }
+#[tauri::command]
+fn register_account_api(api: State<Mutex<Api>>) -> Result<Response, Response> {
+    let api = api.lock().unwrap();
+    match api.register_account() {
+        Ok(resp) => Ok(resp),
+        Err(err) => {
+            eprintln!("Error register account: {}", err);
+            Err(err.into())
+        }
+    }
+}
+
+#[tauri::command]
+fn delete_account_api(api: State<Mutex<Api>>) -> Result<Response, Response> {
+    let api = api.lock().unwrap();
+    match api.delete_account() {
+        Ok(resp) => Ok(resp),
+        Err(err) => {
+            eprintln!("Error delete account: {}", err);
+            Err(err.into())
+        }
+    }
+}
 
 // Основная точка запуска приложения Tauri
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -80,8 +92,8 @@ pub fn run() {
             is_connected_api,
             // get_mode_api,
             // set_mode_api,
-            // register_account_api,
-            // delete_account_api
+            register_account_api,
+            delete_account_api
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
