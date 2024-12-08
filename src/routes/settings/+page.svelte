@@ -6,6 +6,12 @@
     import { fly } from "svelte/transition";
     import { cubicInOut } from "svelte/easing"
 
+    import { open } from '@tauri-apps/plugin-shell';
+
+    import SvelteIcon from "../icons/svelte.svelte";
+    import TauriIcon from "../icons/tauri.svelte";
+
+
     import { Arrow_left } from "svelte-google-materialdesign-icons";
     import { Person_add } from "svelte-google-materialdesign-icons"
     import { Person_remove } from "svelte-google-materialdesign-icons"
@@ -14,6 +20,21 @@
     let version: string | null = null;
 
     let alertRef: AlertComponent | null = null;
+
+    let buttonLinks = [
+        // {
+        //     icon: "/github.svg",
+        //     link: "https://github.com/progzone122/warp-cloudflare-gui-rust"
+        // },
+        {
+            icon: TauriIcon,
+            link: "https://v2.tauri.app/"
+        },
+        {
+            icon: SvelteIcon,
+            link: "https://svelte.dev/"
+        }
+    ];
 
     onMount(async () => {
         version = await getVersion();
@@ -45,7 +66,7 @@
             on:click={() => goto("/")}>
         <Arrow_left size="24" />
     </button>
-    <div class="w-full flex flex-col gap-2">
+    <div class="w-full flex flex-grow flex-col gap-2">
         <h1 class="text-2xl font-bold">Version: {version ?? "x.x.x"}</h1>
         <hr class="w-full h-1 mx-auto border-0 rounded dark:bg-gray-700">
         <h1 class="text-2xl font-bold">Account: </h1>
@@ -67,6 +88,15 @@
                 </div>
             </button>
         </div>
+    </div>
+    <div class="w-full flex gap-4 justify-center">
+        {#each buttonLinks as button}
+            <button type="button"
+                    class="w-14 h-14 flex justify-center items-center text-white hover:bg-accent-600 active:bg-accent-700 font-medium rounded-full text-sm p-2"
+                    on:click={() => open(button.link) }>
+                <svelte:component this="{button.icon}" />
+            </button>
+        {/each}
     </div>
 
 </div>

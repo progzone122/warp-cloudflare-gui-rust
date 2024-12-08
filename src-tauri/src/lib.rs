@@ -43,7 +43,6 @@ fn is_connected_api(api: State<Mutex<Api>>) -> bool {
     })
 }
 
-
 // #[tauri::command]
 // fn get_mode_api(api: State<Mutex<Api>>) -> i32 {
 //     let api = api.lock().unwrap();
@@ -84,7 +83,8 @@ fn delete_account_api(api: State<Mutex<Api>>) -> Result<Response, Response> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .manage(Mutex::new(Api::new())) // Передаём экземпляр Api в приложение
+        .plugin(tauri_plugin_shell::init())
+        .manage(Mutex::new(Api::new()))
         .invoke_handler(tauri::generate_handler![
             connect_api,
             disconnect_api,
@@ -93,7 +93,7 @@ pub fn run() {
             // get_mode_api,
             // set_mode_api,
             register_account_api,
-            delete_account_api
+            delete_account_api,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

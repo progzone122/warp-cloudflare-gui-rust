@@ -34,7 +34,10 @@
     "app": {
       "all": true,
       "show": true,
-      "hide": true
+      "hide": true,
+      "execute": true,
+      "sidecar": true,
+      "open": true
     }
   }
 }

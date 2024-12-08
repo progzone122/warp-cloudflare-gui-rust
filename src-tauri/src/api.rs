@@ -1,12 +1,11 @@
-use std::borrow::Cow;
-use std::process::{Command, Output};
-use anyhow::{anyhow, Result};
 use anyhow::Error as AnyhowError;
+use anyhow::{anyhow, Result};
 use serde::Serialize;
+use std::borrow::Cow;
 use std::fmt;
+use std::process::{Command, Output};
 
-#[derive(Serialize)]
-#[derive(Debug)]
+#[derive(Serialize, Debug)]
 pub enum StatusCode {
     UnknownError,
     UnexpectedError,
@@ -16,8 +15,7 @@ pub enum StatusCode {
     Success,
 }
 
-#[derive(Serialize)]
-#[derive(Debug)]
+#[derive(Serialize, Debug)]
 pub struct Response {
     pub message: String,
     pub details: String,
@@ -31,7 +29,11 @@ impl fmt::Display for Response {
 }
 impl From<AnyhowError> for Response {
     fn from(err: AnyhowError) -> Self {
-        Response::new(StatusCode::UnknownError, "An error occurred", &format!("{:?}", err))
+        Response::new(
+            StatusCode::UnknownError,
+            "An error occurred",
+            &format!("{:?}", err),
+        )
     }
 }
 
@@ -75,7 +77,7 @@ impl Api {
 
         if result.status.success() {
             let stdout = String::from_utf8_lossy(&result.stdout);
-            let stdout : &str = stdout.trim_end_matches("\n");
+            let stdout: &str = stdout.trim_end_matches("\n");
             if stdout == "Success" {
                 return Ok(true);
             }
@@ -95,18 +97,10 @@ impl Api {
 
             if parts.len() > 2 {
                 let lines: Vec<&str> = parts[2].split('\n').collect();
-                return Ok(Response::new(
-                    StatusCode::Success,
-                    "",
-                    lines[0].trim(),
-                ));
+                return Ok(Response::new(StatusCode::Success, "", lines[0].trim()));
             } else if parts.len() > 1 {
                 let lines: Vec<&str> = parts[1].split('\n').collect();
-                return Ok(Response::new(
-                    StatusCode::Success,
-                    "",
-                    lines[0].trim(),
-                ));
+                return Ok(Response::new(StatusCode::Success, "", lines[0].trim()));
             }
         } else {
             let stderr: Cow<str> = String::from_utf8_lossy(&result.stderr);
@@ -130,7 +124,8 @@ impl Api {
             StatusCode::ParsingError,
             "Unexpected error while parsing warp-cli output",
             "No details available",
-        ).to_string()))
+        )
+        .to_string()))
     }
     pub fn is_connected(&self) -> Result<bool> {
         let status = self.status()?; // Обрабатываем возможные ошибки
@@ -187,7 +182,8 @@ impl Api {
                 Ok(Response::new(
                     StatusCode::Success,
                     "Register account",
-                    "Successful account registration"))
+                    "Successful account registration",
+                ))
             } else {
                 Err(anyhow!(Response::new(
                     StatusCode::RegisterAccountError,
@@ -202,7 +198,7 @@ impl Api {
                 "Error",
                 error.to_string().as_ref()
             )))
-        }
+        };
     }
     pub fn delete_account(&self) -> Result<Response> {
         let result: Output = Command::new("sh")
@@ -219,7 +215,8 @@ impl Api {
                 Ok(Response::new(
                     StatusCode::Success,
                     "Account deletion",
-                    "Successful account deletion"))
+                    "Successful account deletion",
+                ))
             } else {
                 Err(anyhow!(Response::new(
                     StatusCode::RegisterAccountError,
@@ -234,6 +231,6 @@ impl Api {
                 "Error",
                 error.to_string().as_ref()
             )))
-        }
+        };
     }
 }
