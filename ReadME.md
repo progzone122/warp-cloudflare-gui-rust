@@ -3,65 +3,84 @@ A GUI application based on warp-cli for linux written in Rust
 
 ## Screenshots
 
-![1729435264_grim](https://github.com/user-attachments/assets/6e2d3bdb-b13f-4491-a071-f95141dadec1)
-![1729435273_grim](https://github.com/user-attachments/assets/8de1de84-fe55-4153-9672-d880f90eef39)
-![1729435282_grim](https://github.com/user-attachments/assets/d5bfa816-ca19-461a-a303-8559b25869f7)
-![1729435290_grim](https://github.com/user-attachments/assets/311d553f-cb99-4637-8989-1b0286497247)
-
 
 
 ## Installation Guide
+
+**WARNING! To connect using WARP you need to register an account, this can be done through the GUI itself (Settings button in the bottom right corner -> Account -> register).**
+
 ### I use Arch Linux btw?
-Install using the script from AUR!
+1. Install using the script from AUR!
 
 ``
     yay -S warp-gui
 ``
 
-**WARNING! To connect using WARP you need to register an account, this can be done through the GUI itself (Settings button in the bottom right corner -> Account -> register).**
+2. Start systemd service **warp-svc**
 
-### Or install manually
+``
+     sudo systemctl enable warp-svc.service --now
+``
+
+### Debian package
 1. Install [warp-cli](https://developers.cloudflare.com/warp-client/get-started/linux/)
 
-    - Arch Linux:
+   - Arch Linux:
 
-        ``
-            yay -S cloudflare-warp-bin
-        ``
-    - Ubuntu / Debian:
-   
-        ``
-            sudo apt install cloudflare-warp
-        ``
-   
-    - CentOS / RHEL:
-   
-        ``
-            sudo yum install cloudflare-warp
-        ``
+     ``
+         yay -S cloudflare-warp-bin
+     ``
+   - Ubuntu / Debian:
 
+     ``
+         sudo apt install cloudflare-warp
+     ``
+
+   - CentOS / RHEL:
+
+     ``
+         sudo yum install cloudflare-warp
+     ``
 2. Start systemd service **warp-svc**
 
    ``
         sudo systemctl enable warp-svc.service --now
    ``
-3. Download the GUI binary in the [release section](https://github.com/progzone122/warp-cloudflare-gui-rust/releases)
-4. Grant permission to run
+3. Download and install Debian package:
+   - If you are using dpkg:
+   ``
+      sudo dpkg -i warp-gui.deb
+   ``
+   - If you are using debtap:
+   
+      ```
+         sudo debtap -u
+         debtap -Q warp-gui.deb
+         sudo pacman -U generated_name.pkg.tar.xz
+      ```
 
-    ``
-        sudo chmod +x warp-gui
-    ``
+### AppImage package
+1. Install [warp-cli](https://developers.cloudflare.com/warp-client/get-started/linux/)
 
-5. To run the program anywhere using the terminal, move the binary file to the /usr/bin directory
+   - Arch Linux:
 
-    ``
-        sudo mv ./warp-gui /usr/bin/warp-gui
-    ``
+     ``
+         yay -S cloudflare-warp-bin
+     ``
+   - Ubuntu / Debian:
 
-6. Run binary
+     ``
+         sudo apt install cloudflare-warp
+     ``
 
-    ``
-         warp-gui
-    ``
+   - CentOS / RHEL:
 
-7. **WARNING! To connect using WARP you need to register an account, this can be done through the GUI itself (Settings button in the bottom right corner -> Account -> register).**
+     ``
+         sudo yum install cloudflare-warp
+     ``
+2. Start systemd service **warp-svc**
+
+   ``
+        sudo systemctl enable warp-svc.service --now
+   ``
+3. Download and run AppImage package
