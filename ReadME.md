@@ -2,11 +2,12 @@
 A GUI application based on warp-cli for linux written in Rust
 
 ## Screenshots
-![изображение](https://github.com/user-attachments/assets/c4d4f95a-c572-41af-bc57-30fe46f2e9b7)
-![изображение](https://github.com/user-attachments/assets/dfbe90ab-506a-4672-8790-e63288ae95bb)
-![изображение](https://github.com/user-attachments/assets/9d7ecf32-45c2-44ad-889d-c3220964b19e)
-![изображение](https://github.com/user-attachments/assets/0f792b3c-38d8-4f1d-9eb2-75eb45cd4ffb)
-
+<div style="display: flex; flex-wrap: wrap;">
+    <img src="https://github.com/user-attachments/assets/c4d4f95a-c572-41af-bc57-30fe46f2e9b7" width="400">
+    <img src="https://github.com/user-attachments/assets/dfbe90ab-506a-4672-8790-e63288ae95bb" width="400">
+    <img src="https://github.com/user-attachments/assets/9d7ecf32-45c2-44ad-889d-c3220964b19e" width="400">
+    <img src="https://github.com/user-attachments/assets/0f792b3c-38d8-4f1d-9eb2-75eb45cd4ffb" width="400">
+</div>
 
 
 ## Installation Guide
