@@ -3,7 +3,6 @@
     export let height: number = 32;
     export let border_color: string = "#e6e6e6";
     export let border_width: number = 8;
-
 </script>
 <svg
         width={width}

@@ -10,7 +10,8 @@
 
     import SvelteIcon from "../icons/svelte.svelte";
     import TauriIcon from "../icons/tauri.svelte";
-
+    import GitHubIcon from "../icons/github.svelte";
+    import RustIcon from "../icons/rust.svelte";
 
     import { Arrow_left } from "svelte-google-materialdesign-icons";
     import { Person_add } from "svelte-google-materialdesign-icons"
@@ -22,10 +23,10 @@
     let alertRef: AlertComponent | null = null;
 
     let buttonLinks = [
-        // {
-        //     icon: "/github.svg",
-        //     link: "https://github.com/progzone122/warp-cloudflare-gui-rust"
-        // },
+        {
+            icon: GitHubIcon,
+            link: "https://github.com/progzone122/warp-cloudflare-gui-rust/"
+        },
         {
             icon: TauriIcon,
             link: "https://v2.tauri.app/"
@@ -33,6 +34,10 @@
         {
             icon: SvelteIcon,
             link: "https://svelte.dev/"
+        },
+        {
+            icon: RustIcon,
+            link: "https://www.rust-lang.org/"
         }
     ];
 
