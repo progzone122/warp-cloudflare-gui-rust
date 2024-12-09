@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "warp-cloudflare-gui",
+  "version": "0.3.0",
+  "identifier": "com.progzone122.warp-cloudflare-gui",
+  "build": {
+    "beforeDevCommand": "bun run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "bun run build",
+    "frontendDist": "../build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "WARP",
+        "minWidth": 300,
+        "minHeight": 300,
+        "width": 400,
+        "height": 500
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/icon.ico"
+    ]
+  },
+  "plugins": {
+    "app": {
+      "all": true,
+      "show": true,
+      "hide": true,
+      "execute": true,
+      "sidecar": true,
+      "open": true
+    }
+  }
+}
